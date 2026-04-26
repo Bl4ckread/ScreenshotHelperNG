@@ -7,6 +7,8 @@ public:
 
     void LoadData(std::string a_type, const CSimpleIniA& a_ini);
 
+    void SaveData(CSimpleIniA& a_ini);
+
     [[nodiscard]] static Settings* GetSingleton() {
         static Settings singleton;
         return std::addressof(singleton);
@@ -28,9 +30,24 @@ private:
                 a_value = a_ini.GetValue(a_section, a_key, a_value.c_str());
             }
         }
+
+        template <class T>
+        static void set_value(CSimpleIniA& a_ini, T& a_value, const char* a_section, const char* a_key) {
+            if constexpr (std::is_same_v<T, bool>) {
+                a_ini.SetBoolValue(a_section, a_key, a_value);
+            } else if constexpr (std::is_integral_v<T>) {
+                a_ini.SetLongValue(a_section, a_key, a_value);
+            } else if constexpr (std::is_same_v<T, double>) {
+                a_ini.SetDoubleValue(a_section, a_key, a_value);
+            } else if constexpr (std::is_floating_point_v<T>) {
+                a_ini.SetDoubleValue(a_section, a_key, a_value);
+            } else {
+                a_ini.SetValue(a_section, a_key, a_value.c_str());
+            }
+        }
     };
 
-    bool wabbajack;
+    bool wabbajack = false;
 
     Settings();
     Settings(const Settings&) = delete;

@@ -6,6 +6,12 @@ void Settings::LoadData(std::string a_section, const CSimpleIniA& a_ini)
     detail::get_value(a_ini, wabbajack, a_section.c_str(), "Wabbajack");
 }
 
+void Settings::SaveData(CSimpleIniA& a_ini) 
+{ 
+    
+    detail::set_value(a_ini, wabbajack, "General", "Wabbajack");
+}
+
 bool Settings::GetWabbajack() const { return wabbajack; }
 
 Settings::Settings() {
@@ -15,9 +21,10 @@ Settings::Settings() {
     ini.SetUnicode();
     //ini.SetMultikey();
 
-    ini.LoadFile(path.c_str());
-
-    LoadData("General", ini);
-
-    (void)ini.SaveFile(path.c_str());
+    if (ini.LoadFile(path.c_str()) >= 0) {
+        LoadData("General", ini);
+    } else {
+        SaveData(ini);
+        (void)ini.SaveFile(path.c_str());
+    }
 }
