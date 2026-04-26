@@ -30,16 +30,19 @@ std::string ScreenshotHandler::FilenameToString()
 const char* ScreenshotHandler::GetCurrentLocationName(RE::Actor* a_actor)
 {
 	for (auto location = a_actor->GetCurrentLocation(); location; location = location->parentLoc) {
-		auto locationName = location->GetName();
-		if (locationName && strlen(locationName))
+		if (auto locationName = location->GetName(); locationName && strlen(locationName))
 			return locationName;
 	}
 
 	for (auto worldspace = a_actor->GetWorldspace(); worldspace; worldspace = worldspace->parentWorld) {
-		auto worldspaceName = worldspace->GetName();
-		if (worldspaceName && strlen(worldspaceName))
+		if (auto worldspaceName = worldspace->GetName(); worldspaceName && strlen(worldspaceName))
 			return worldspaceName;
 	}
+
+	if (auto parentCell = a_actor->GetParentCell(); parentCell) {
+        if (auto parentCellName = parentCell->GetFullName(); parentCellName && strlen(parentCellName)) 
+			return parentCellName;
+    }
 
 	return nullptr;
 }
