@@ -14,6 +14,11 @@ project(ScreenshotHelper VERSION 1.1.0 LANGUAGES CXX)
 set(CMAKE_CXX_FLAGS "/utf-8")
 set(CMAKE_C_FLAGS "/utf-8")
 
+set(CommonLibPath "extern/CommonLibSSE-NG")
+set(CommonLibName "CommonLibSSE")
+add_subdirectory(${CommonLibPath} ${CommonLibName} EXCLUDE_FROM_ALL)
+include("${CommonLibPath}/cmake/CommonLibSSE.cmake")
+
 # #
 # YOU DO NOT NEED TO EDIT ANYTHING BELOW HERE
 # #
@@ -40,7 +45,6 @@ endif()
 # set(OUTPUT_FOLDER "C:/path/to/any/folder")
 
 # Setup your SKSE plugin as an SKSE plugin!
-find_package(CommonLibSSE CONFIG REQUIRED)
 add_commonlibsse_plugin(${PROJECT_NAME} SOURCES src/XSEPlugin.cpp src/Hooks.cpp src/ScreenshotHandler.cpp src/Settings.cpp)# <--- specifies plugin.cpp
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23) # <--- use C++23 standard
 target_precompile_headers(${PROJECT_NAME} PRIVATE include/PCH.h) # <--- PCH.h is required!
